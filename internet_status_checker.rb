@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'httparty'
 
 class InternetStatusChecker
@@ -6,13 +8,14 @@ class InternetStatusChecker
   end
 
   def online?
-    @urls_to_check.all? { |url| is_responding?(url) }
+    @urls_to_check.all? { |url| responding?(url) }
   end
 
   private
 
-  def is_responding?(url)
-    r = HTTParty.get(url)
-    r.code >= 200 and r.code < 400
+  def responding?(url)
+    HTTParty.get(url)
+  rescue SocketError
+    false
   end
 end
